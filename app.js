@@ -5,8 +5,8 @@ function app(people){
   switch(searchType){
     case 'yes':
       let result = searchByName(people);
-      let person = result[0];
-      mainMenu(person, people);
+      let personName = result[0];
+      mainMenu(personName, people);
       break;
     case 'no':
       searchByTraits(people);
@@ -47,20 +47,21 @@ function searchByTraits(people) {
   }  
   alert(filteredPeople.length + " were found matching the criteria.");
   let userPrompt;
-  do{
-    userPrompt = prompt("Would you like to filter your search further? y/n", "");
-  }while((userPrompt !== 'y')&&(userPrompt !== 'n'));
-  
-  if(userPrompt === 'y'){
-    searchByTraits(filteredPeople);
-  }
-  else{
-    for (let i = 0; i < filteredPeople.length; i++){
+  // TODO: remove for loop?
+  for(let i=0; i<filteredPeople.length; i++){
     let foundPerson = filteredPeople[i];
-    mainMenu(foundPerson, people)
-    }
+    do{
+      userPrompt = prompt("Would you like to filter your search further? y/n", "");
+      if(userPrompt === 'y'){
+        searchByTraits(filteredPeople);
+      }
+      else if(userPrompt === 'n'){
+        mainMenu(foundPerson, people);
+      }
+    }while((userPrompt!=='y')&&(userPrompt!=='n'))
   }
 }
+
 function searchByWeight(people) {
   let userInputWeight = prompt("How much does the person weigh?", "");
   let newArray = people.filter(function (el) {
@@ -105,8 +106,12 @@ function searchByAge(people) {
   let userInputAge = prompt("How old is the person?", "");
   userInputAge = parseInt(userInputAge);
   let todaysDate = prompt("What is today's date? Month/Day/Year", "");
+  let age = determineAge(userInputAge, todaysDate, people);
+}
+  
+function determineAge(userInputAge, todaysDate, people){
   let age = 0;
-  let todaysDateArray = todaysDate.split("/");//make function determineAge
+  let todaysDateArray = todaysDate.split("/");//make function determine age
   let newArray = people.filter(function(el){
     age = 0;
     let dateArray = el.dob.split("/");
@@ -125,6 +130,7 @@ function searchByAge(people) {
       }
     }
     if(age === userInputAge) {
+      console.log (el.firstName);
       return true;
     }
     else {
@@ -155,37 +161,37 @@ function mainMenu(person, people){
       getInfo(people, person);
       break;
     case "family":
-      let familyArray = getFamily(people, person);
-      break;
+    getFamily(people, person);
+    break;
     case "descendants":
-      let descendantsArray = getDescendants(people, person);
-      console.log(person.firstName + " " + person.lastName + "'s descendants: ");
-      for(let i = 0; i < descendantsArray.length; i++){
-       console.log(descendantsArray[i].firstName + " " + descendantsArray[i].lastName);
-      }
-      break;
+    let descendantsArray = getDescendants(people, person);
+    console.log(person.firstName + " " + person.lastName + "'s descendants: ");
+    for(let i = 0; i < descendantsArray.length; i++){
+    console.log(descendantsArray[i].firstName + " " + descendantsArray[i].lastName);
+    }
+    break;
     case "restart":
-      app(people);
-      break;
+    app(people);
+    break;
     case "next":
-      return;
+    return;
     case "quit":
-      let userPrompt = prompt("Would you like to do another search? 'yes' or 'no'", "");
-      while((userPrompt!=='yes')&&(userPrompt!=='no')){
-        userPrompt = prompt("Invalid input, enter 'yes' to do another search, 'no' to exit'", "");
-      }
-      if(userPrompt === 'yes'){
-        app(people);
-      }
-      if(userPrompt === 'no'){
-        alert("Thanks for using the system, refresh to start over.");
-        process.exit();
-      }
+    let userPrompt = prompt("Would you like to do another search? 'yes' or 'no'", "");
+    while((userPrompt!=='yes')&&(userPrompt!=='no'))
+    {
+      userPrompt = prompt("Invalid input, enter 'yes' to do another search, 'no' to exit'", "");
+    }
+    if(userPrompt === 'yes'){
+      app(people);
+    }
+    if(userPrompt === 'no'){
+      alert("Thanks for using the system, refresh to start over.");
+      process.exit();
+    }
     default:
     return mainMenu(person, people);
   }
 }
-
 function getDescendants(people, person, descendantsArray = []){
   let newDescendantsArray = [];
   let concatArray = [];
@@ -226,13 +232,11 @@ function searchByName(people){
   })
   return newArray;
 }
-
 function displayPeople(people){
   alert(people.map(function(person){
     return person.firstName + " " + person.lastName;
   }).join("\n"));
 }
-
 function displayPerson(person){
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
@@ -245,7 +249,6 @@ function displayPerson(person){
   console.log(personInfo);
   return personInfo;
 }
-
 function promptFor(question, valid){
   let response;
   do{
@@ -254,22 +257,21 @@ function promptFor(question, valid){
   
   return response;
 }
-
 function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
 }
-
 function chars(input){
   return true;
 }
-
 function getFamily(people, person){
-  let familyArray = [];
-  familyArray.push(getSpouse(people, person));
-  familyArray.push(getParents(people, person));
-  familyArray.push(getSiblings(people, person));
-  familyArray.push(getChildren(people, person));
-  return familyArray;
+  let spouse;
+  let parentsArray = [];
+  let siblingsArray;
+  let descendantsArray = [];//do something here
+  spouse = getSpouse(people, person);
+  parentsArray = getParents(people, person);
+  siblingsArray = getSiblings(people, person);
+  descendantsArray = getChildren(people, person);
 }
 
 function getSpouse(people, person){
@@ -284,22 +286,22 @@ function getSpouse(people, person){
 function getParents(people, person, parentsArray = []){
    people.filter(function(el){
      for (let i = 0; i < person.parents.length; i++){
-      if (el.personId === person.parents[i]) {
+       if (el.personId === person.parents[i]) {
        console.log(el.firstName + " " + el.lastName + " is the parent of " + person.firstName + " " + person.lastName + ".");
        parentsArray.push(el);
        return true; 
-      }
-      else{
-        return false;
-      } 
-    } 
-   });return parentsArray;
-}
-
+   }
+       else{
+          return false;
+       } 
+     } 
+   } 
+ );return parentsArray;
+ }
 function getSiblings(people, person){
  let siblingsArray = [];
  people.filter(function(el){
-    for (let i = 0; i < el.parents.length; i++){
+     for (let i = 0; i < el.parents.length; i++){
       for (let j = 0; j < person.parents.length; j++){
         if (el.parents[i] === person.parents[j]) {
           if(el.personId !== person.personId){
@@ -310,12 +312,11 @@ function getSiblings(people, person){
           else{
             return false;
           }
-        }
-      } 
-    } 
-  }); return siblingsArray;
-}
-
+      }
+     } 
+   } 
+ }); return siblingsArray;
+ }
 function getChildren(people, person){
   let childrenArray = getDescendants(people,person);
   for(let i = 0; i < childrenArray.length; i++){
@@ -323,3 +324,6 @@ function getChildren(people, person){
   }
   return childrenArray;
 }
+
+
+
