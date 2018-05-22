@@ -321,9 +321,17 @@ function getSiblings(people, person){
 }
 
 function getChildren(people, person){
-  let childrenArray = getDescendants(people,person);
-  for(let i = 0; i < childrenArray.length; i++){
-    console.log(childrenArray[i].firstName + " " + childrenArray[i].lastName + " is " + person.firstName + " " + person.lastName + "'s descendant.");
-  }
-  return childrenArray;
+  let childrenArray = [];
+  people.filter(function(el){
+    for(let i = 0; i < el.parents.length; i++){
+      if(el.parents[i] === person.personId){
+        childrenArray.push(el);
+        console.log(childrenArray[i].firstName + " " + childrenArray[i].lastName + " is " + person.firstName + " " + person.lastName + "'s child.")
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }); return childrenArray;
 }
