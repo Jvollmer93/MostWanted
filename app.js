@@ -102,36 +102,41 @@ function searchByGender(people) {
 }
 
 function searchByAge(people) {
-  let userInputAge = prompt("How old is the person?", "");
-  userInputAge = parseInt(userInputAge);
-  let todaysDate = prompt("What is today's date? Month/Day/Year", "");
-  let age = 0;
-  let todaysDateArray = todaysDate.split("/");//make function determineAge
-  let newArray = people.filter(function(el){
-    age = 0;
-    let dateArray = el.dob.split("/");
-    if (parseInt(dateArray[0])<parseInt(todaysDateArray[0])){
-      age = 2018 - parseInt(dateArray[2]);
-    }
-    else if (parseInt(dateArray[0])>parseInt(todaysDateArray[0])){
-      age = 2017 - parseInt(dateArray[2]);
-    }
-    else{
-      if(parseInt(dateArray[1])<parseInt(todaysDateArray[1])){
-        age = 2017 - parseInt(dateArray[2]);
-      }
-      else{
-        age = 2018 - parseInt(dateArray[2]);
-      }
-    }
-    if(age === userInputAge) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  });
-  return newArray;
+ let userInputAge = prompt("How old is the person?", "");
+ userInputAge = parseInt(userInputAge);
+ let todaysDate = prompt("What is today's date? Month/Day/Year", "");
+ let ageArray = determineAge(userInputAge, todaysDate, people);
+ return ageArray;
+}
+ 
+function determineAge(userInputAge, todaysDate, people){
+ let age = 0;
+ let todaysDateArray = todaysDate.split("/");
+ let newArray = people.filter(function(el){
+   age = 0;
+   let dateArray = el.dob.split("/");
+   if (parseInt(dateArray[0])<parseInt(todaysDateArray[0])){
+     age = 2018 - parseInt(dateArray[2]);
+   }
+   else if (parseInt(dateArray[0])>parseInt(todaysDateArray[0])){
+     age = 2017 - parseInt(dateArray[2]);
+   }
+   else{
+     if(parseInt(dateArray[1])<parseInt(todaysDateArray[1])){
+       age = 2017 - parseInt(dateArray[2]);
+     }
+     else{
+       age = 2018 - parseInt(dateArray[2]);
+     }
+   }
+   if(age === userInputAge) {
+     return true;
+   }
+   else {
+     return false;
+   }
+ });
+ return newArray;
 }
 
 function searchByOccupation(people) {
@@ -178,7 +183,6 @@ function mainMenu(person, people){
         app(people);
       }
       if(userPrompt === 'no'){
-        alert("Thanks for using the system, refresh to start over.");
         process.exit();
       }
     default:
