@@ -72,13 +72,9 @@ function searchByTraits(people) {
 }
 
 function sym(filteredPeople) {
-  let fullArr = [];
   let finalArr = [];
-  for (let count = 0; count < filteredPeople.length; count ++) {
-      fullArr[count] = filteredPeople[count];
-    } 
-    let newArr = fullArr[0].reduce( function(prev, e1) {
-    if(prev.indexOf(e1) < 0 && fullArr.every( function(arr){
+    let newArr = filteredPeople[0].reduce( function(prev, e1) {
+    if(prev.indexOf(e1) < 0 && filteredPeople.every( function(arr){
       return arr.indexOf(e1) > -1;
     })){
     return [...prev, e1];    
