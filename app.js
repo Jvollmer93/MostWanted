@@ -130,8 +130,8 @@ function searchByAge(people) {
   userInputAge = parseInt(userInputAge);
   let todaysDate = new Date();
   let todaysDateMS = todaysDate.getTime();
-  let since1900 = todaysDateMS + (70*365*1000*60*60*24);//todaysDate in ms + 70 years in ms
-  since1900 = (since1900/1000/60/60/24/365) + 1900;//prompt("What is today's date? Month/Day/Year", "");
+  let since1900 = todaysDateMS + (70*365*1000*60*60*24);
+  since1900 = (since1900/1000/60/60/24/365) + 1900;
   let ageArray = [];
   ageArray = determineAge(since1900, people, userInputAge);
   return ageArray;
