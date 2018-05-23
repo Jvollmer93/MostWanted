@@ -340,7 +340,7 @@ function getSpouse(people, person){
 function getParents(people, person){
   let parentsArray = [];
   for (let i = 0; i < person.parents.length; i++){
-    parentsArray =people.filter(function(el){
+    parentsArray = people.filter(function(el){
       if (el.personId === person.parents[i]) {
         console.log(el.firstName + " " + el.lastName + " is the parent of " + person.firstName + " " + person.lastName + ".");
         parentsArray.push(el);
