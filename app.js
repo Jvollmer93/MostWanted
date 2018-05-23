@@ -337,19 +337,38 @@ function getSpouse(people, person){
  } 
 } 
 
-function getParents(people, person, parentsArray = []){
-   people.filter(function(el){
-     for (let i = 0; i < person.parents.length; i++){
+function getParents(people, person){
+  let parentsArray = [];
+  for (let i = 0; i < person.parents.length; i++){
+    parentsArray =people.filter(function(el){
       if (el.personId === person.parents[i]) {
-       console.log(el.firstName + " " + el.lastName + " is the parent of " + person.firstName + " " + person.lastName + ".");
-       parentsArray.push(el);
-       return true; 
+        console.log(el.firstName + " " + el.lastName + " is the parent of " + person.firstName + " " + person.lastName + ".");
+        parentsArray.push(el);
+        return true; 
       }
       else{
         return false;
       } 
-    } 
-   });return parentsArray;
+    });
+  }
+  return parentsArray;
+}
+
+function getChildren(people, person){
+  let childrenArray = [];
+  childrenArray = people.filter(function(el){
+    for(let i = 0; i < el.parents.length; i++){
+      if(el.parents[i] === person.personId){
+        childrenArray.push(el);
+        console.log(el.firstName + " " + el.lastName + " is " + person.firstName + " " + person.lastName + "'s child.")
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }); 
+  return childrenArray;
 }
 
 function getSiblings(people, person){
@@ -370,21 +389,4 @@ function getSiblings(people, person){
       } 
     } 
   }); return siblingsArray;
-}
-
-function getChildren(people, person){
-  let childrenArray = [];
-  childrenArray = people.filter(function(el){
-    for(let i = 0; i < el.parents.length; i++){
-      if(el.parents[i] === person.personId){
-        childrenArray.push(el);
-        console.log(el.firstName + " " + el.lastName + " is " + person.firstName + " " + person.lastName + "'s child.")
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-  }); 
-  return childrenArray;
 }
