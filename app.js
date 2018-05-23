@@ -48,7 +48,7 @@ function searchByTraits(people) {
       break;
   }  
   }
-  filteredPeople = sym(filteredPeople);
+  filteredPeople = reduceArray(filteredPeople);
   alert(filteredPeople.length + " were found matching the criteria.");
 
     for (let i = 0; i < filteredPeople.length; i++){
@@ -71,7 +71,7 @@ function searchByTraits(people) {
   // }
 }
 
-function sym(filteredPeople) {
+function reduceArray(filteredPeople) {
   let finalArr = [];
     let newArr = filteredPeople[0].reduce( function(prev, e1) {
     if(prev.indexOf(e1) < 0 && filteredPeople.every( function(arr){
@@ -126,42 +126,69 @@ function searchByGender(people) {
 }
 
 function searchByAge(people) {
- let userInputAge = prompt("How old is the person?", "");
- userInputAge = parseInt(userInputAge);
- let todaysDate = prompt("What is today's date? Month/Day/Year", "");
- let ageArray = determineAge(userInputAge, todaysDate, people);
- return ageArray;
+  let userInputAge = prompt("How old is the person?", "");
+  userInputAge = parseInt(userInputAge);
+  let todaysDate = new Date();
+  let todaysDateMS = todaysDate.getTime();
+  let since1900 = todaysDateMS + (70*365*1000*60*60*24);//todaysDate in ms + 70 years in ms
+  since1900 = (since1900/1000/60/60/24/365) + 1900;//prompt("What is today's date? Month/Day/Year", "");
+  let ageArray = [];
+  ageArray = determineAge(since1900, people, userInputAge);
+  return ageArray;
 }
  
-function determineAge(userInputAge, todaysDate, people){
- let age = 0;
- let todaysDateArray = todaysDate.split("/");
- let newArray = people.filter(function(el){
-   age = 0;
-   let dateArray = el.dob.split("/");
-   if (parseInt(dateArray[0])<parseInt(todaysDateArray[0])){
-     age = 2018 - parseInt(dateArray[2]);
-   }
-   else if (parseInt(dateArray[0])>parseInt(todaysDateArray[0])){
-     age = 2017 - parseInt(dateArray[2]);
-   }
-   else{
-     if(parseInt(dateArray[1])<parseInt(todaysDateArray[1])){
-       age = 2017 - parseInt(dateArray[2]);
-     }
-     else{
-       age = 2018 - parseInt(dateArray[2]);
-     }
-   }
-   if(age === userInputAge) {
-     return true;
-   }
-   else {
-     return false;
-   }
- });
- return newArray;
+function determineAge(yearsSince1900,  people, age){
+  let dateOfBirthArray = [];
+let newArray = people.filter(function(el){
+  dateOfBirthArray = el.dob.split("/");
+  let yearsAlive = parseInt(dateOfBirthArray[0]*30*24*60*60*1000) + parseInt(dateOfBirthArray[1]*24*60*60*1000) + parseInt(dateOfBirthArray[2]*365*24*60*60*1000);//ms alive
+  yearsAlive = yearsAlive/365/24/60/60/1000;
+  if(parseInt(age) === parseInt(yearsSince1900 - yearsAlive)){
+    return true;
+  }
+  else{
+    return false;
+  }
+})
+return newArray;
 }
+// function searchByAge(people) {
+//  let userInputAge = prompt("How old is the person?", "");
+//  userInputAge = parseInt(userInputAge);
+//  let todaysDate = prompt("What is today's date? Month/Day/Year", "");
+//  let ageArray = determineAge(userInputAge, todaysDate, people);
+//  return ageArray;
+// }
+ 
+// function determineAge(userInputAge, todaysDate, people){
+//  let age = 0;
+//  let todaysDateArray = todaysDate.split("/");
+//  let newArray = people.filter(function(el){
+//    age = 0;
+//    let dateArray = el.dob.split("/");
+//    if (parseInt(dateArray[0])<parseInt(todaysDateArray[0])){
+//      age = 2018 - parseInt(dateArray[2]);
+//    }
+//    else if (parseInt(dateArray[0])>parseInt(todaysDateArray[0])){
+//      age = 2017 - parseInt(dateArray[2]);
+//    }
+//    else{
+//      if(parseInt(dateArray[1])<parseInt(todaysDateArray[1])){
+//        age = 2017 - parseInt(dateArray[2]);
+//      }
+//      else{
+//        age = 2018 - parseInt(dateArray[2]);
+//      }
+//    }
+//    if(age === userInputAge) {
+//      return true;
+//    }
+//    else {
+//      return false;
+//    }
+//  });
+//  return newArray;
+// }
 
 function searchByOccupation(people) {
   let userInputOccupation = prompt("What is the person's occupation?", "");
