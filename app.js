@@ -20,47 +20,75 @@ function app(people){
 
 function searchByTraits(people) {
   let userSearchChoice = prompt("What would you like to search by? 'height', 'weight', 'eye color', 'gender', 'age', 'occupation'.", "").toLowerCase();
-  let filteredPeople;
-  switch(userSearchChoice) {
+  userSearchChoice = userSearchChoice.split(", ");
+  let filteredPeople = [];
+  for(let i = 0; i < userSearchChoice.length; i++){
+  switch(userSearchChoice[i]) {
     case "height":
-      filteredPeople = searchByHeight(people);
+      filteredPeople.push(searchByHeight(people));
       break;
     case "weight":
-      filteredPeople = searchByWeight(people);
+      filteredPeople.push(searchByWeight(people));
       break;
     case "eye color":
-      filteredPeople = searchByEyeColor(people);
+      filteredPeople.push(searchByEyeColor(people));
       break;
     case "gender":
-      filteredPeople = searchByGender(people);
+      filteredPeople.push(searchByGender(people));
       break;
     case "age": 
-      filteredPeople = searchByAge(people);
+      filteredPeople.push(searchByAge(people));
       break;
     case "occupation":
-      filteredPeople = searchByOccupation(people);
+      filteredPeople.push(searchByOccupation(people));
       break;
     default:
       alert("You entered an invalid search type! Please try again.");
       searchByTraits(people);
       break;
   }  
-  alert(filteredPeople.length + " were found matching the criteria.");
-  let userPrompt;
-  do{
-    userPrompt = prompt("Would you like to filter your search further? y/n", "");
-  }while((userPrompt !== 'y')&&(userPrompt !== 'n'));
-  
-  if(userPrompt === 'y'){
-    searchByTraits(filteredPeople);
   }
-  else{
+  filteredPeople = sym(filteredPeople);
+  alert(filteredPeople.length + " were found matching the criteria.");
+
     for (let i = 0; i < filteredPeople.length; i++){
     let foundPerson = filteredPeople[i];
     mainMenu(foundPerson, people)
     }
-  }
+  //let userPrompt;
+  //do{
+  //   userPrompt = prompt("Would you like to filter your search further? y/n", "");
+  // }while((userPrompt !== 'y')&&(userPrompt !== 'n'));
+  
+  // if(userPrompt === 'y'){
+  //   searchByTraits(filteredPeople);
+  // }
+  // else{
+  //   for (let i = 0; i < filteredPeople.length; i++){
+  //   let foundPerson = filteredPeople[i];
+  //   mainMenu(foundPerson, people)
+  //   }
+  // }
 }
+
+function sym(filteredPeople) {
+  let fullArr = [];
+  let finalArr = [];
+  for (let count = 0; count < filteredPeople.length; count ++) {
+      fullArr[count] = filteredPeople[count];
+    } 
+    let newArr = fullArr[0].reduce( function(prev, e1) {
+    if(prev.indexOf(e1) < 0 && fullArr.every( function(arr){
+      return arr.indexOf(e1) > -1;
+    })){
+    return [...prev, e1];    
+    }else{
+      return prev;
+    };
+  },[]);        
+  return newArr;
+}
+
 function searchByWeight(people) {
   let userInputWeight = prompt("How much does the person weigh?", "");
   let newArray = people.filter(function (el) {
