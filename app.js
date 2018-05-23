@@ -1,3 +1,4 @@
+
 "use strict";
 
 function app(people){
@@ -384,6 +385,6 @@ function getChildren(people, person){
         return false;
       }
     }
-  }); s
+  }); 
   return childrenArray;
 }
